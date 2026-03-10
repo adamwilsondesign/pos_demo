@@ -1,4 +1,5 @@
-import { Printer, Mail, X } from 'lucide-react';
+import { useState } from 'react';
+import { Printer, Mail, X, Check } from 'lucide-react';
 import type { Transaction } from '../../stores/demoData';
 import { CASHIER, CUSTOMER } from '../../stores/demoData';
 
@@ -9,6 +10,13 @@ interface ReceiptModalProps {
 }
 
 export function ReceiptModal({ open, onClose, transaction }: ReceiptModalProps) {
+  const [emailSent, setEmailSent] = useState(false);
+
+  const handleEmail = () => {
+    setEmailSent(true);
+    setTimeout(() => setEmailSent(false), 2000);
+  };
+
   if (!open || !transaction) return null;
 
   return (
@@ -97,13 +105,21 @@ export function ReceiptModal({ open, onClose, transaction }: ReceiptModalProps) 
 
         {/* Actions */}
         <div className="flex gap-2 p-4 border-t border-gray-200">
-          <button className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gray-900 text-white rounded-xl text-[13px] font-semibold hover:bg-gray-800 active:scale-[0.98] transition-all">
+          <button
+            onClick={() => window.print()}
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gray-900 text-white rounded-xl text-[13px] font-semibold hover:bg-gray-800 active:scale-[0.98] transition-all"
+          >
             <Printer size={14} />
             Print
           </button>
-          <button className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-gray-100 text-gray-800 rounded-xl text-[13px] font-semibold hover:bg-gray-200 active:scale-[0.98] transition-all">
-            <Mail size={14} />
-            Email
+          <button
+            onClick={handleEmail}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[13px] font-semibold active:scale-[0.98] transition-all ${
+              emailSent ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+            }`}
+          >
+            {emailSent ? <Check size={14} /> : <Mail size={14} />}
+            {emailSent ? 'Email Sent!' : 'Email'}
           </button>
         </div>
       </div>

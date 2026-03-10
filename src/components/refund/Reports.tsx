@@ -4,6 +4,39 @@ import { DEMO_REPORTS } from '../../stores/demoData';
 
 type ReportView = 'list' | 'item-sales' | 'gl-activity' | 'user-activity';
 
+function exportCsv(view: ReportView) {
+  let csv = '';
+  let filename = 'report.csv';
+
+  if (view === 'item-sales') {
+    csv = 'Item,Qty,Revenue,GL Account\n';
+    DEMO_REPORTS.itemSales.forEach(r => {
+      csv += `"${r.item}",${r.qty},${r.revenue.toFixed(2)},"${r.gl}"\n`;
+    });
+    filename = 'item-sales-report.csv';
+  } else if (view === 'gl-activity') {
+    csv = 'GL Code,Description,Debits,Credits\n';
+    DEMO_REPORTS.glActivity.forEach(r => {
+      csv += `"${r.code}","${r.description}",${r.debits.toFixed(2)},${r.credits.toFixed(2)}\n`;
+    });
+    filename = 'gl-activity-report.csv';
+  } else if (view === 'user-activity') {
+    csv = 'Cashier,Transactions,Total,Refunds,Voids\n';
+    DEMO_REPORTS.userActivity.forEach(r => {
+      csv += `"${r.user}",${r.transactions},${r.total.toFixed(2)},${r.refunds},${r.voids}\n`;
+    });
+    filename = 'user-activity-report.csv';
+  }
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export function Reports() {
   const [view, setView] = useState<ReportView>('list');
 
@@ -62,11 +95,17 @@ export function Reports() {
             </div>
           </div>
           <div className="flex gap-2">
-            <button className="flex items-center gap-1.5 px-3 py-2 bg-[#112a33] border border-[#1a3d48] rounded-xl text-[12px] font-medium text-white hover:bg-[#163540] hover:border-[#245560] transition-all active:scale-[0.98]">
+            <button
+              onClick={() => window.print()}
+              className="flex items-center gap-1.5 px-3 py-2 bg-[#112a33] border border-[#1a3d48] rounded-xl text-[12px] font-medium text-white hover:bg-[#163540] hover:border-[#245560] transition-all active:scale-[0.98]"
+            >
               <Printer size={13} />
               Print
             </button>
-            <button className="flex items-center gap-1.5 px-3 py-2 bg-[#112a33] border border-[#1a3d48] rounded-xl text-[12px] font-medium text-white hover:bg-[#163540] hover:border-[#245560] transition-all active:scale-[0.98]">
+            <button
+              onClick={() => exportCsv(view)}
+              className="flex items-center gap-1.5 px-3 py-2 bg-[#112a33] border border-[#1a3d48] rounded-xl text-[12px] font-medium text-white hover:bg-[#163540] hover:border-[#245560] transition-all active:scale-[0.98]"
+            >
               <Download size={13} />
               Export
             </button>

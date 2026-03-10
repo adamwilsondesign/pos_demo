@@ -43,50 +43,50 @@ export function PaymentScreen({ method, total: _total, remainingBalance, totalPa
   ];
 
   const methodConfig = {
-    credit: { icon: <CreditCard size={24} />, label: 'Credit / Debit Card', color: 'text-blue-400', bgColor: 'bg-blue-500/10' },
-    cash: { icon: <Banknote size={24} />, label: 'Cash', color: 'text-emerald-400', bgColor: 'bg-emerald-500/10' },
-    cheque: { icon: <FileCheck size={24} />, label: 'Cheque', color: 'text-amber-400', bgColor: 'bg-amber-500/10' },
+    credit: { icon: <CreditCard size={24} />, label: 'Credit / Debit Card', color: 'text-blue-600', bgColor: 'bg-blue-50' },
+    cash: { icon: <Banknote size={24} />, label: 'Cash', color: 'text-emerald-600', bgColor: 'bg-emerald-50' },
+    cheque: { icon: <FileCheck size={24} />, label: 'Cheque', color: 'text-amber-600', bgColor: 'bg-amber-50' },
   };
 
   const cfg = methodConfig[method];
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 fade-in bg-[#0d1b21]">
+    <div className="flex-1 flex flex-col items-center justify-center p-8 fade-in bg-white">
       <div className="w-full max-w-md space-y-5">
         {/* Back */}
-        <button onClick={onBack} className="flex items-center gap-2 text-[13px] text-[#5a8a9a] hover:text-white transition-colors">
+        <button onClick={onBack} className="flex items-center gap-2 text-[13px] text-gray-400 hover:text-gray-900 transition-colors">
           <ArrowLeft size={16} />
           Back to payment methods
         </button>
 
         {/* Method header */}
-        <div className="bg-[#112a33] rounded-2xl border border-[#1a3d48] p-6 text-center">
+        <div className="bg-gray-50 rounded-2xl border border-gray-200 p-6 text-center">
           <div className={`w-14 h-14 mx-auto rounded-2xl ${cfg.bgColor} flex items-center justify-center mb-3`}>
             <div className={cfg.color}>{cfg.icon}</div>
           </div>
-          <h2 className="text-[18px] font-bold text-white">{cfg.label}</h2>
+          <h2 className="text-[18px] font-bold text-gray-900">{cfg.label}</h2>
 
           {totalPaid > 0 && (
-            <div className="mt-4 bg-[#0d1b21] rounded-xl p-3">
-              <div className="text-[11px] text-[#5a8a9a]">Already Paid</div>
-              <div className="text-[16px] font-bold text-emerald-400">${totalPaid.toFixed(2)}</div>
+            <div className="mt-4 bg-white rounded-xl p-3 border border-gray-200">
+              <div className="text-[11px] text-gray-400">Already Paid</div>
+              <div className="text-[16px] font-bold text-emerald-600">${totalPaid.toFixed(2)}</div>
             </div>
           )}
         </div>
 
         {/* Amount input */}
-        <div className="bg-[#112a33] rounded-2xl border border-[#1a3d48] p-6">
-          <div className="text-[13px] text-[#7ab0c0] mb-2">Amount to charge</div>
+        <div className="bg-gray-50 rounded-2xl border border-gray-200 p-6">
+          <div className="text-[13px] text-gray-500 mb-2">Amount to charge</div>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl text-[#5a8a9a]">$</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl text-gray-400">$</span>
             <input
               type="text"
               value={amount}
               onChange={e => setAmount(e.target.value)}
-              className="w-full bg-[#0d1b21] border border-[#1a3d48] rounded-xl pl-10 pr-4 py-4 text-[28px] font-bold text-white text-center focus:outline-none focus:border-blue-500/50 transition-colors"
+              className="w-full bg-white border border-gray-300 rounded-xl pl-10 pr-4 py-4 text-[28px] font-bold text-gray-900 text-center focus:outline-none focus:border-blue-500 transition-colors"
             />
           </div>
-          <div className="text-[12px] text-[#5a8a9a] text-center mt-2">
+          <div className="text-[12px] text-gray-400 text-center mt-2">
             Remaining balance: ${remainingBalance.toFixed(2)}
           </div>
 
@@ -96,7 +96,7 @@ export function PaymentScreen({ method, total: _total, remainingBalance, totalPa
               <button
                 key={q.label}
                 onClick={() => setAmount(q.value.toFixed(2))}
-                className="px-3 py-1.5 bg-[#163540] hover:bg-[#1e4a56] rounded-lg text-[12px] font-medium text-[#7ab0c0] hover:text-white transition-colors"
+                className="px-3 py-1.5 bg-white hover:bg-gray-100 border border-gray-200 rounded-lg text-[12px] font-medium text-gray-600 hover:text-gray-900 transition-colors"
               >
                 {q.label}
               </button>
@@ -105,9 +105,9 @@ export function PaymentScreen({ method, total: _total, remainingBalance, totalPa
         </div>
 
         {isPartial && (
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3.5 text-center">
-            <p className="text-[13px] text-amber-400 font-semibold">Split Tender — Partial Payment</p>
-            <p className="text-[12px] text-amber-400/60 mt-1">
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-center">
+            <p className="text-[13px] text-amber-700 font-semibold">Split Tender — Partial Payment</p>
+            <p className="text-[12px] text-amber-600/70 mt-1">
               ${(remainingBalance - amountNum).toFixed(2)} will remain after this payment
             </p>
           </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CreditCard, Wifi, Smartphone } from 'lucide-react';
+import { X } from 'lucide-react';
 import type { Payment } from '../../stores/demoData';
 
 interface PaymentTerminalProps {
@@ -26,73 +26,74 @@ export function PaymentTerminal({ amount, onComplete, onCancel }: PaymentTermina
   }, [amount, onComplete]);
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#060e12] flex items-center justify-center">
-      <div className="text-center max-w-sm space-y-8">
-        {/* Amount */}
-        <div>
-          <div className="text-[48px] font-bold text-white tracking-tight">${amount.toFixed(2)}</div>
-          <div className="text-[13px] text-[#5a8a9a] mt-1">Kingston Service Counter</div>
-        </div>
+    <div className="fixed inset-0 z-50 bg-white flex items-center justify-center">
+      {/* Close button */}
+      {stage === 'waiting' && (
+        <button
+          onClick={onCancel}
+          className="absolute top-6 right-6 w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+        >
+          <X size={24} />
+        </button>
+      )}
 
-        {/* Terminal visual */}
+      <div className="text-center max-w-sm space-y-8">
+        {/* Waiting stage — concentric rings + NFC icon */}
         {stage === 'waiting' && (
-          <div className="space-y-6 fade-in">
-            <div className="w-36 h-36 mx-auto rounded-3xl bg-[#112a33] border-2 border-[#1a3d48] flex items-center justify-center relative pulse-ring">
-              <Wifi size={52} className="text-blue-400 animate-pulse" />
-              <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                <Smartphone size={13} className="text-white" />
+          <div className="space-y-8 fade-in">
+            <div className="relative w-48 h-48 mx-auto flex items-center justify-center">
+              {/* Concentric blue rings */}
+              <div className="absolute inset-0 rounded-full border-2 border-blue-100 terminal-ring-1" />
+              <div className="absolute inset-4 rounded-full border-2 border-blue-200 terminal-ring-2" />
+              <div className="absolute inset-8 rounded-full border-2 border-blue-300 terminal-ring-3" />
+              <div className="absolute inset-12 rounded-full border-2 border-blue-400/60 terminal-ring-4" />
+              {/* NFC / contactless icon */}
+              <div className="relative z-10 w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 8.32a7.43 7.43 0 0 1 0 7.36" />
+                  <path d="M9.46 6.21a11.76 11.76 0 0 1 0 11.58" />
+                  <path d="M12.91 4.1a15.91 15.91 0 0 1 .01 15.8" />
+                  <path d="M16.37 2a20.16 20.16 0 0 1 0 20" />
+                </svg>
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-[13px] text-gray-400 uppercase tracking-wider">Total</div>
+              <div className="text-[42px] font-bold text-gray-900 tracking-tight">${amount.toFixed(2)}</div>
+              <p className="text-[16px] text-gray-500">Tap, insert, or swipe to pay</p>
+            </div>
+          </div>
+        )}
+
+        {/* Processing stage */}
+        {stage === 'processing' && (
+          <div className="space-y-6 fade-in">
+            <div className="w-48 h-48 mx-auto rounded-full bg-gray-50 flex items-center justify-center">
+              <div className="w-16 h-16 border-[3px] border-blue-500 border-t-transparent rounded-full animate-spin" />
             </div>
             <div className="space-y-2">
-              <p className="text-[20px] font-semibold text-white">Tap, Insert, or Swipe</p>
-              <p className="text-[14px] text-[#5a8a9a]">Present payment card on the terminal</p>
-            </div>
-            <div className="flex justify-center gap-8 text-[#3a6070]">
-              <div className="flex flex-col items-center gap-1.5">
-                <Wifi size={20} />
-                <span className="text-[10px] font-medium">Tap</span>
-              </div>
-              <div className="flex flex-col items-center gap-1.5">
-                <CreditCard size={20} />
-                <span className="text-[10px] font-medium">Insert</span>
-              </div>
-              <div className="flex flex-col items-center gap-1.5">
-                <CreditCard size={20} className="rotate-90" />
-                <span className="text-[10px] font-medium">Swipe</span>
-              </div>
+              <div className="text-[13px] text-gray-400 uppercase tracking-wider">Total</div>
+              <div className="text-[42px] font-bold text-gray-900 tracking-tight">${amount.toFixed(2)}</div>
+              <p className="text-[16px] text-blue-500 font-medium">Processing payment...</p>
             </div>
           </div>
         )}
 
-        {stage === 'processing' && (
-          <div className="space-y-5 fade-in">
-            <div className="w-36 h-36 mx-auto rounded-3xl bg-[#112a33] border-2 border-blue-500/50 flex items-center justify-center">
-              <div className="w-14 h-14 border-[3px] border-blue-400 border-t-transparent rounded-full animate-spin" />
-            </div>
-            <p className="text-[18px] font-semibold text-blue-400">Processing payment...</p>
-          </div>
-        )}
-
+        {/* Approved stage */}
         {stage === 'approved' && (
-          <div className="space-y-5 scale-in">
-            <div className="w-36 h-36 mx-auto rounded-3xl bg-emerald-500/10 border-2 border-emerald-500/50 flex items-center justify-center">
-              <svg className="w-16 h-16 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <div className="space-y-6 scale-in">
+            <div className="w-48 h-48 mx-auto rounded-full bg-green-50 flex items-center justify-center">
+              <svg className="w-20 h-20 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <p className="text-[18px] font-semibold text-emerald-400">Approved</p>
-            <p className="text-[14px] text-[#5a8a9a]">Visa ending in 4242</p>
+            <div className="space-y-2">
+              <div className="text-[42px] font-bold text-gray-900 tracking-tight">${amount.toFixed(2)}</div>
+              <p className="text-[18px] text-green-500 font-semibold">Approved</p>
+              <p className="text-[14px] text-gray-400">Visa ending in 4242</p>
+            </div>
           </div>
-        )}
-
-        {/* Cancel */}
-        {stage === 'waiting' && (
-          <button
-            onClick={onCancel}
-            className="text-[13px] text-[#3a6070] hover:text-[#7ab0c0] transition-colors"
-          >
-            Cancel
-          </button>
         )}
       </div>
     </div>

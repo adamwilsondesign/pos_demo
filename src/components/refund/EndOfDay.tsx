@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DollarSign, CreditCard, Banknote, FileCheck, RotateCcw, Percent, CheckCircle, Lock } from 'lucide-react';
+import { DollarSign, CreditCard, Banknote, FileCheck, RotateCcw, Percent, CheckCircle, Lock, Printer } from 'lucide-react';
 import { END_OF_DAY, CASHIER } from '../../stores/demoData';
 import { Badge } from '../shared/Badge';
 
@@ -18,7 +18,16 @@ export function EndOfDay() {
               {CASHIER.name} — {CASHIER.location} — March 9, 2026
             </p>
           </div>
-          <Badge variant={closed ? 'green' : 'amber'}>{closed ? 'Closed' : 'Open'}</Badge>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => window.print()}
+              className="flex items-center gap-1.5 px-3 py-2 bg-[#112a33] border border-[#1a3d48] rounded-xl text-[12px] font-medium text-white hover:bg-[#163540] hover:border-[#245560] transition-all active:scale-[0.98]"
+            >
+              <Printer size={13} />
+              Print
+            </button>
+            <Badge variant={closed ? 'green' : 'amber'}>{closed ? 'Closed' : 'Open'}</Badge>
+          </div>
         </div>
 
         {/* Summary cards */}
