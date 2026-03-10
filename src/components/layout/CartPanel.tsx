@@ -18,8 +18,6 @@ export function CartPanel({
   cart, removeFromCart, updateQuantity, applyDiscount,
   subtotal, tax, convenienceFee, total, onCheckout,
 }: CartPanelProps) {
-  const itemCount = cart.reduce((s, i) => s + i.quantity, 0);
-
   return (
     <div className="w-[460px] bg-[#0d1b21] border-l border-[#1a3d48] flex flex-col h-full shrink-0">
       {/* Header */}

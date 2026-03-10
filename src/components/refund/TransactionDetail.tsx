@@ -1,7 +1,7 @@
 import { ArrowLeft, Printer, RotateCcw, Clock, CreditCard } from 'lucide-react';
 import { Badge } from '../shared/Badge';
 import type { Transaction } from '../../stores/demoData';
-import { CASHIER, CUSTOMER, calculateConvenienceFee } from '../../stores/demoData';
+import { CASHIER, calculateConvenienceFee } from '../../stores/demoData';
 
 interface TransactionDetailProps {
   transaction: Transaction | null;

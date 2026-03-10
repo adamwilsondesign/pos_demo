@@ -19,7 +19,7 @@ interface SmartGridProps {
   addToCart: (item: Omit<CartItem, 'id' | 'quantity'>) => void;
 }
 
-export function SmartGrid({ onOpenLookup, onOpenProducts, addToCart }: SmartGridProps) {
+export function SmartGrid({ onOpenLookup, onOpenProducts, addToCart: _addToCart }: SmartGridProps) {
   const handleTileClick = (tile: typeof TILE_CATEGORIES[number]) => {
     if (tile.id === 'products') onOpenProducts();
     else if (tile.id === 'parking') onOpenLookup('Parking Tickets');

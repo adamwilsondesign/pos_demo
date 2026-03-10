@@ -1,4 +1,4 @@
-import { Link, ExternalLink, DollarSign, Database, RefreshCw, Lock } from 'lucide-react';
+import { Link, ExternalLink, Database, RefreshCw, Lock } from 'lucide-react';
 import { Badge } from '../shared/Badge';
 
 export function IntegratedItemConfig() {

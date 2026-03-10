@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, RotateCcw, CheckCircle, AlertTriangle } from 'lucide-react';
-import { Badge } from '../shared/Badge';
+import { ArrowLeft, CheckCircle, AlertTriangle } from 'lucide-react';
 import type { Transaction } from '../../stores/demoData';
 
 interface RefundProcessProps {

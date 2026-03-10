@@ -1,4 +1,4 @@
-import { Users, Shield, MapPin, Key, CheckCircle, XCircle } from 'lucide-react';
+import { Shield, MapPin, Key, CheckCircle, XCircle } from 'lucide-react';
 import { Badge } from '../shared/Badge';
 
 export function UserSetup() {

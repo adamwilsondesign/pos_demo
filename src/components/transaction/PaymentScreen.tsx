@@ -12,7 +12,7 @@ interface PaymentScreenProps {
   onShowTerminal: () => void;
 }
 
-export function PaymentScreen({ method, total, remainingBalance, totalPaid, onProcessPayment, onBack, onShowTerminal }: PaymentScreenProps) {
+export function PaymentScreen({ method, total: _total, remainingBalance, totalPaid, onProcessPayment, onBack, onShowTerminal }: PaymentScreenProps) {
   const [amount, setAmount] = useState(remainingBalance.toFixed(2));
   const [processing, setProcessing] = useState(false);
 

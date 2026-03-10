@@ -1,8 +1,6 @@
 import {
-  Home, Settings, ShoppingCart, RotateCcw, BarChart3,
-  User, LogOut, Shield, Package, Link, Users, Tag,
-  CreditCard, CheckCircle, Clock, FileText, Calendar,
-  Receipt, MoreHorizontal, Wifi, Lock, FolderOpen
+  Home, User, Users, Tag,
+  MoreHorizontal, Wifi, Lock, FolderOpen
 } from 'lucide-react';
 import type { DemoMode, SetupScreen, TransactionScreen, RefundScreen } from '../../stores/useStore';
 
@@ -21,7 +19,6 @@ export function Sidebar({
   mode, setMode,
   setupScreen, setSetupScreen,
   transactionScreen, setTransactionScreen,
-  refundScreen, setRefundScreen,
 }: SidebarProps) {
   return (
     <div className="w-[72px] bg-[#091419] flex flex-col items-center border-r border-[#1a3d48] h-full shrink-0">
