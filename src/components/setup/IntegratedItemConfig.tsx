@@ -1,7 +1,17 @@
-import { Link, ExternalLink, Database, RefreshCw, Lock } from 'lucide-react';
+import { useState } from 'react';
+import { Link, ExternalLink, Database, RefreshCw, Lock, Loader2 } from 'lucide-react';
 import { Badge } from '../shared/Badge';
 
-export function IntegratedItemConfig() {
+export function IntegratedItemConfig({ onSave }: { onSave?: (msg: string) => void }) {
+  const [testing, setTesting] = useState<string | null>(null);
+
+  const handleTestConnection = (name: string) => {
+    setTesting(name);
+    setTimeout(() => {
+      setTesting(null);
+      onSave?.(`${name} — Connection test successful`);
+    }, 1200);
+  };
   return (
     <div className="flex-1 overflow-y-auto p-6 fade-in bg-[#0d1b21]">
       <div className="max-w-3xl mx-auto space-y-5">
@@ -89,11 +99,11 @@ export function IntegratedItemConfig() {
             Connected External Systems
           </h3>
           <div className="space-y-2">
-            <SystemRow name="Property Tax System" status="Connected" type="Municipal" />
-            <SystemRow name="Kingston Transit" status="Connected" type="Transit" />
-            <SystemRow name="Dynamics 365" status="Connected" type="ERP" />
-            <SystemRow name="Parking Enforcement" status="Connected" type="Enforcement" />
-            <SystemRow name="Permits & Licensing" status="Connected" type="Licensing" />
+            <SystemRow name="Property Tax System" status="Connected" type="Municipal" testing={testing} onTest={handleTestConnection} />
+            <SystemRow name="Kingston Transit" status="Connected" type="Transit" testing={testing} onTest={handleTestConnection} />
+            <SystemRow name="Dynamics 365" status="Connected" type="ERP" testing={testing} onTest={handleTestConnection} />
+            <SystemRow name="Parking Enforcement" status="Connected" type="Enforcement" testing={testing} onTest={handleTestConnection} />
+            <SystemRow name="Permits & Licensing" status="Connected" type="Licensing" testing={testing} onTest={handleTestConnection} />
           </div>
         </div>
       </div>
@@ -135,7 +145,8 @@ function CompareRow({ feature, static_, integrated }: { feature: string; static_
   );
 }
 
-function SystemRow({ name, status, type }: { name: string; status: string; type: string }) {
+function SystemRow({ name, status, type, testing, onTest }: { name: string; status: string; type: string; testing: string | null; onTest: (name: string) => void }) {
+  const isThisTesting = testing === name;
   return (
     <div className="flex items-center justify-between py-2.5 px-3 bg-[#0d1b21] rounded-xl">
       <div className="flex items-center gap-3">
@@ -145,7 +156,16 @@ function SystemRow({ name, status, type }: { name: string; status: string; type:
           <div className="text-[11px] text-[#5a8a9a]">{type}</div>
         </div>
       </div>
-      <Badge variant="green">{status}</Badge>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => onTest(name)}
+          disabled={!!testing}
+          className="text-[11px] text-blue-400 hover:text-blue-300 px-2 py-1 rounded-lg hover:bg-[#112a33] font-medium transition-colors disabled:opacity-40"
+        >
+          {isThisTesting ? <Loader2 size={12} className="animate-spin" /> : 'Test'}
+        </button>
+        <Badge variant="green">{status}</Badge>
+      </div>
     </div>
   );
 }

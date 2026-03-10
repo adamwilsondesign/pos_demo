@@ -128,6 +128,11 @@ function CartItemRow({
           )}
           <div className="flex items-center gap-2 mt-1">
             <span className="text-[11px] text-[#3a6070]">{item.taxLabel}</span>
+            {item.category === 'Prepared Food' && (
+              <span className="text-[10px] text-amber-400/60">
+                {item.price < 4 ? '(<$4 GST)' : '(≥$4 HST)'}
+              </span>
+            )}
             {item.sourceSystem && (
               <span className="text-[10px] bg-[#112a33] px-1.5 py-0.5 rounded text-[#5a8a9a]">
                 {item.sourceSystem}

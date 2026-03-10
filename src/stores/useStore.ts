@@ -21,6 +21,11 @@ export function useStore() {
 
   const [lookupModal, setLookupModal] = useState<string | null>(null);
   const [productModal, setProductModal] = useState(false);
+  const [customTiles, setCustomTiles] = useState<string[]>([]);
+
+  const addTile = useCallback((tileId: string) => {
+    setCustomTiles(prev => prev.includes(tileId) ? prev : [...prev, tileId]);
+  }, []);
 
   const addToCart = useCallback((item: Omit<CartItem, 'id' | 'quantity'>) => {
     setCart(prev => {
@@ -104,5 +109,6 @@ export function useStore() {
     resetTransaction,
     lookupModal, setLookupModal,
     productModal, setProductModal,
+    customTiles, addTile,
   };
 }

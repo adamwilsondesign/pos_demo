@@ -1,14 +1,85 @@
-import { Shield, MapPin, Key, CheckCircle, XCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Shield, MapPin, Key, CheckCircle, XCircle, UserPlus } from 'lucide-react';
 import { Badge } from '../shared/Badge';
 
-export function UserSetup() {
+export function UserSetup({ onSave }: { onSave?: (msg: string) => void }) {
+  const [showInvite, setShowInvite] = useState(false);
+  const [inviteName, setInviteName] = useState('');
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('Cashier');
+
+  const handleInvite = () => {
+    if (inviteName && inviteEmail) {
+      onSave?.(`Invitation sent to ${inviteName} (${inviteEmail})`);
+      setShowInvite(false);
+      setInviteName('');
+      setInviteEmail('');
+      setInviteRole('Cashier');
+    }
+  };
+
   return (
     <div className="flex-1 overflow-y-auto p-6 fade-in bg-[#0d1b21]">
       <div className="max-w-3xl mx-auto space-y-5">
-        <div>
-          <h1 className="text-[20px] font-bold text-white tracking-tight">Users & Role Configuration</h1>
-          <p className="text-[13px] text-[#5a8a9a] mt-1">Manage staff roles, permissions, and location access</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-[20px] font-bold text-white tracking-tight">Users & Role Configuration</h1>
+            <p className="text-[13px] text-[#5a8a9a] mt-1">Manage staff roles, permissions, and location access</p>
+          </div>
+          <button
+            onClick={() => setShowInvite(!showInvite)}
+            className="flex items-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl text-[12px] font-medium text-white transition-all active:scale-[0.98]"
+          >
+            <UserPlus size={13} />
+            Invite User
+          </button>
         </div>
+
+        {showInvite && (
+          <div className="bg-[#112a33] rounded-2xl border border-blue-500/30 p-5 fade-in">
+            <h4 className="text-[14px] font-semibold text-white mb-3">New User Invitation</h4>
+            <div className="grid grid-cols-3 gap-3">
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={inviteName}
+                onChange={e => setInviteName(e.target.value)}
+                className="bg-[#0d1b21] border border-[#1a3d48] rounded-xl px-3 py-2.5 text-[13px] text-white placeholder-[#3a6070] focus:outline-none focus:border-blue-500/50"
+              />
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={inviteEmail}
+                onChange={e => setInviteEmail(e.target.value)}
+                className="bg-[#0d1b21] border border-[#1a3d48] rounded-xl px-3 py-2.5 text-[13px] text-white placeholder-[#3a6070] focus:outline-none focus:border-blue-500/50"
+              />
+              <select
+                value={inviteRole}
+                onChange={e => setInviteRole(e.target.value)}
+                className="bg-[#0d1b21] border border-[#1a3d48] rounded-xl px-3 py-2.5 text-[13px] text-white focus:outline-none focus:border-blue-500/50"
+              >
+                <option>Cashier</option>
+                <option>Supervisor</option>
+                <option>Administrator</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-2 mt-3">
+              <button
+                onClick={handleInvite}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl text-[12px] font-medium text-white transition-all active:scale-[0.98]"
+              >
+                Send Invitation
+              </button>
+              <button
+                onClick={() => setShowInvite(false)}
+                className="px-4 py-2 bg-[#0d1b21] border border-[#1a3d48] rounded-xl text-[12px] font-medium text-[#5a8a9a] hover:text-white transition-all"
+              >
+                Cancel
+              </button>
+              <span className="text-[11px] text-[#3a6070] ml-2">SSO provisioned via Microsoft Entra ID</span>
+            </div>
+          </div>
+        )}
 
         {/* Roles */}
         <div className="bg-[#112a33] rounded-2xl border border-[#1a3d48] p-6">

@@ -3,16 +3,24 @@ import { Badge } from '../shared/Badge';
 import { Toggle } from '../shared/Toggle';
 import { useState } from 'react';
 
-export function DiscountConfig() {
+export function DiscountConfig({ onSave }: { onSave?: (msg: string) => void }) {
   const [fapActive, setFapActive] = useState(true);
   const [promoActive, setPromoActive] = useState(true);
 
   return (
     <div className="flex-1 overflow-y-auto p-6 fade-in bg-[#0d1b21]">
       <div className="max-w-3xl mx-auto space-y-5">
-        <div>
-          <h1 className="text-[20px] font-bold text-white tracking-tight">Discounts & Promotions</h1>
-          <p className="text-[13px] text-[#5a8a9a] mt-1">Configure municipal discount programs and promotional pricing</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-[20px] font-bold text-white tracking-tight">Discounts & Promotions</h1>
+            <p className="text-[13px] text-[#5a8a9a] mt-1">Configure municipal discount programs and promotional pricing</p>
+          </div>
+          <button
+            onClick={() => onSave?.('Discount configuration saved')}
+            className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-xl text-[12px] font-medium text-white transition-all active:scale-[0.98]"
+          >
+            Save Changes
+          </button>
         </div>
 
         {/* Municipal Fee Assistance */}

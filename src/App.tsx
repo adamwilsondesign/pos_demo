@@ -10,6 +10,7 @@ import { DiscountConfig } from './components/setup/DiscountConfig';
 import { SmartGrid } from './components/transaction/SmartGrid';
 import { LookupModal } from './components/transaction/LookupModal';
 import { ProductModal } from './components/transaction/ProductModal';
+import { AddTileModal } from './components/transaction/AddTileModal';
 import { CheckoutScreen } from './components/transaction/CheckoutScreen';
 import { PaymentScreen } from './components/transaction/PaymentScreen';
 import { PaymentTerminal } from './components/transaction/PaymentTerminal';
@@ -21,6 +22,8 @@ import { RefundProcess } from './components/refund/RefundProcess';
 import { RefundSuccess } from './components/refund/RefundSuccess';
 import { Reports } from './components/refund/Reports';
 import { EndOfDay } from './components/refund/EndOfDay';
+import { LockScreen } from './components/shared/LockScreen';
+import { Toast } from './components/shared/Toast';
 import type { Payment } from './stores/demoData';
 
 export default function App() {
@@ -29,6 +32,14 @@ export default function App() {
   const [showTerminal, setShowTerminal] = useState(false);
   const [showReceipt, setShowReceipt] = useState(false);
   const [refundInfo, setRefundInfo] = useState<{ id: string; amount: number; item: string } | null>(null);
+  const [locked, setLocked] = useState(false);
+  const [addTileModal, setAddTileModal] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = useCallback((msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2500);
+  }, []);
 
   const handleCheckout = () => {
     store.setTransactionScreen('checkout');
@@ -48,7 +59,6 @@ export default function App() {
       store.completeTransaction(payment);
       store.setTransactionScreen('payment-success');
     } else {
-      // Partial — stay on checkout for next payment
       store.setTransactionScreen('checkout');
     }
   }, [store]);
@@ -76,7 +86,6 @@ export default function App() {
     store.setRefundScreen('refund-success');
   };
 
-  // Show cart panel only on home & checkout in transaction mode
   const showCart = store.mode === 'transaction' && (store.transactionScreen === 'home');
 
   return (
@@ -90,6 +99,7 @@ export default function App() {
         setTransactionScreen={store.setTransactionScreen}
         refundScreen={store.refundScreen}
         setRefundScreen={store.setRefundScreen}
+        onLock={() => setLocked(true)}
       />
 
       {/* Main content */}
@@ -97,10 +107,10 @@ export default function App() {
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Setup screens */}
           {store.mode === 'setup' && store.setupScreen === 'staff' && <StaffAccess />}
-          {store.mode === 'setup' && store.setupScreen === 'static-item' && <StaticItemConfig />}
-          {store.mode === 'setup' && store.setupScreen === 'integrated-item' && <IntegratedItemConfig />}
-          {store.mode === 'setup' && store.setupScreen === 'users' && <UserSetup />}
-          {store.mode === 'setup' && store.setupScreen === 'discounts' && <DiscountConfig />}
+          {store.mode === 'setup' && store.setupScreen === 'static-item' && <StaticItemConfig onSave={showToast} />}
+          {store.mode === 'setup' && store.setupScreen === 'integrated-item' && <IntegratedItemConfig onSave={showToast} />}
+          {store.mode === 'setup' && store.setupScreen === 'users' && <UserSetup onSave={showToast} />}
+          {store.mode === 'setup' && store.setupScreen === 'discounts' && <DiscountConfig onSave={showToast} />}
 
           {/* Transaction screens */}
           {store.mode === 'transaction' && store.transactionScreen === 'home' && (
@@ -108,6 +118,8 @@ export default function App() {
               onOpenLookup={(cat) => store.setLookupModal(cat)}
               onOpenProducts={() => store.setProductModal(true)}
               addToCart={store.addToCart}
+              customTiles={store.customTiles}
+              onAddTile={() => setAddTileModal(true)}
             />
           )}
           {store.mode === 'transaction' && store.transactionScreen === 'checkout' && (
@@ -201,6 +213,12 @@ export default function App() {
         onClose={() => store.setProductModal(false)}
         addToCart={store.addToCart}
       />
+      <AddTileModal
+        open={addTileModal}
+        onClose={() => setAddTileModal(false)}
+        onAdd={(tileId) => { store.addTile(tileId); setAddTileModal(false); showToast('Tile added to terminal'); }}
+        existingTiles={store.customTiles}
+      />
       <ReceiptModal
         open={showReceipt}
         onClose={() => setShowReceipt(false)}
@@ -215,6 +233,12 @@ export default function App() {
           onCancel={() => setShowTerminal(false)}
         />
       )}
+
+      {/* Lock screen */}
+      {locked && <LockScreen onUnlock={() => setLocked(false)} />}
+
+      {/* Toast */}
+      <Toast message={toast || ''} visible={!!toast} />
     </div>
   );
 }

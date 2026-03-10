@@ -170,6 +170,12 @@ export const TILE_CATEGORIES = [
   { id: 'add-tile', label: 'Add Tile', icon: 'Plus', color: '#64748b' },
 ];
 
+export const AVAILABLE_TILES = [
+  { id: 'property-tax', label: 'Property Tax', icon: 'Building', color: '#3b82f6', description: 'Municipal property tax payments' },
+  { id: 'transit', label: 'Transit Pass', icon: 'Bus', color: '#3b82f6', description: 'Kingston Transit pass renewals' },
+  { id: 'prepared-food', label: 'Prepared Food', icon: 'Coffee', color: '#3b82f6', description: 'Cafeteria and prepared food items' },
+];
+
 export const CONVENIENCE_FEE_RATE = 0.02;
 export const CONVENIENCE_FEE_CATEGORIES = ['Property Tax'];
 

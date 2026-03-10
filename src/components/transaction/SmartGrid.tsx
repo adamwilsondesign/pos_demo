@@ -1,6 +1,6 @@
-import { Search, ShoppingBag, Car, Zap, FileText, Building, Bus, Plus, ScanBarcode } from 'lucide-react';
+import { Search, ShoppingBag, Car, Zap, FileText, Building, Bus, Plus, ScanBarcode, Coffee } from 'lucide-react';
 import type { CartItem } from '../../stores/demoData';
-import { TILE_CATEGORIES } from '../../stores/demoData';
+import { TILE_CATEGORIES, AVAILABLE_TILES } from '../../stores/demoData';
 
 const iconMap: Record<string, React.ReactNode> = {
   ShoppingBag: <ShoppingBag size={22} strokeWidth={1.8} />,
@@ -11,24 +11,37 @@ const iconMap: Record<string, React.ReactNode> = {
   Building: <Building size={22} strokeWidth={1.8} />,
   Bus: <Bus size={22} strokeWidth={1.8} />,
   Plus: <Plus size={22} strokeWidth={1.8} />,
+  Coffee: <Coffee size={22} strokeWidth={1.8} />,
 };
 
 interface SmartGridProps {
   onOpenLookup: (category: string) => void;
   onOpenProducts: () => void;
   addToCart: (item: Omit<CartItem, 'id' | 'quantity'>) => void;
+  customTiles?: string[];
+  onAddTile?: () => void;
 }
 
-export function SmartGrid({ onOpenLookup, onOpenProducts, addToCart: _addToCart }: SmartGridProps) {
-  const handleTileClick = (tile: typeof TILE_CATEGORIES[number]) => {
-    if (tile.id === 'products') onOpenProducts();
-    else if (tile.id === 'parking') onOpenLookup('Parking Tickets');
-    else if (tile.id === 'utilities') onOpenLookup('D365 Invoices');
-    else if (tile.id === 'permits') onOpenLookup('Permits');
-    else if (tile.id === 'lookup') onOpenLookup('D365 Invoices');
-    else if (tile.id === 'property-tax') onOpenLookup('Property Tax');
-    else if (tile.id === 'transit') onOpenLookup('Transit Pass');
+export function SmartGrid({ onOpenLookup, onOpenProducts, addToCart: _addToCart, customTiles = [], onAddTile }: SmartGridProps) {
+  const handleTileClick = (tileId: string) => {
+    if (tileId === 'products') onOpenProducts();
+    else if (tileId === 'parking') onOpenLookup('Parking Tickets');
+    else if (tileId === 'utilities') onOpenLookup('D365 Invoices');
+    else if (tileId === 'permits') onOpenLookup('Permits');
+    else if (tileId === 'lookup') onOpenLookup('D365 Invoices');
+    else if (tileId === 'property-tax') onOpenLookup('Property Tax');
+    else if (tileId === 'transit') onOpenLookup('Transit Pass');
+    else if (tileId === 'prepared-food') onOpenProducts();
+    else if (tileId === 'add-tile') onAddTile?.();
   };
+
+  const baseTiles = TILE_CATEGORIES.filter(t => t.id !== 'add-tile');
+  const customTileData = customTiles
+    .map(id => AVAILABLE_TILES.find(t => t.id === id))
+    .filter(Boolean) as typeof AVAILABLE_TILES;
+  const addTile = TILE_CATEGORIES.find(t => t.id === 'add-tile')!;
+
+  const allTiles = [...baseTiles, ...customTileData, addTile];
 
   return (
     <div className="flex-1 overflow-y-auto bg-[#0d1b21]">
@@ -47,13 +60,13 @@ export function SmartGrid({ onOpenLookup, onOpenProducts, addToCart: _addToCart 
         </div>
       </div>
 
-      {/* Service tiles — 2 columns to match reference */}
+      {/* Service tiles — 2 columns */}
       <div className="px-6 py-4">
         <div className="grid grid-cols-2 gap-4">
-          {TILE_CATEGORIES.map(tile => (
+          {allTiles.map(tile => (
             <button
               key={tile.id}
-              onClick={() => handleTileClick(tile)}
+              onClick={() => handleTileClick(tile.id)}
               className={`group relative text-left rounded-2xl border transition-all duration-150 active:scale-[0.98] ${
                 tile.id === 'add-tile'
                   ? 'bg-[#0a1e28] border-[#1a3d48] border-dashed hover:bg-[#112a33]'
@@ -61,7 +74,6 @@ export function SmartGrid({ onOpenLookup, onOpenProducts, addToCart: _addToCart 
               }`}
               style={{ minHeight: '150px' }}
             >
-              {/* Icon */}
               <div className="absolute top-5 left-5">
                 <div
                   className="w-9 h-9 rounded-lg flex items-center justify-center"
@@ -73,7 +85,6 @@ export function SmartGrid({ onOpenLookup, onOpenProducts, addToCart: _addToCart 
                   {iconMap[tile.icon]}
                 </div>
               </div>
-              {/* Label */}
               <div className="absolute bottom-5 left-5 right-5">
                 <span className={`text-[15px] font-semibold leading-tight ${
                   tile.id === 'add-tile' ? 'text-[#3a6070]' : 'text-[#c8dce4] group-hover:text-white'

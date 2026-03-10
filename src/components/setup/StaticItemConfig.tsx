@@ -3,7 +3,7 @@ import { Package, DollarSign, MapPin, BookOpen, Globe, Calculator } from 'lucide
 import { Toggle } from '../shared/Toggle';
 import { Badge } from '../shared/Badge';
 
-export function StaticItemConfig() {
+export function StaticItemConfig({ onSave }: { onSave?: (msg: string) => void }) {
   const [onlineEnabled, setOnlineEnabled] = useState(true);
   const [posEnabled, setPosEnabled] = useState(true);
 
@@ -90,6 +90,13 @@ export function StaticItemConfig() {
             <ConfigRow label="Convenience Fee" value="Not Applicable" />
           </div>
         </div>
+        {/* Save button */}
+        <button
+          onClick={() => onSave?.('Static item configuration saved')}
+          className="w-full py-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-[16px] font-semibold rounded-2xl transition-all duration-150 active:scale-[0.98] shadow-lg shadow-blue-600/20"
+        >
+          Save Configuration
+        </button>
       </div>
     </div>
   );
